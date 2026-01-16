@@ -19,9 +19,13 @@ public class ArticleAnalyzer {
     public static void main(String[] args) {
         ArticleAnalyzer analyzer = new ArticleAnalyzer();
         ArrayList<String> lines = FileOperator.getStringList("data.txt");
-        String line = lines.get(0);
-        Article article = analyzer.parseJson(line);
-        System.out.println(article);
+        for (String line: lines){
+            Article article = analyzer.parseJson(line);
+            String clean = analyzer.removeStopWords(article.getDescription());
+            article.setDescription(clean);
+            System.out.println(article);
+            analyzer.addArticle(article);
+        }  
     }
 
     public void addStopWord(String word){
@@ -29,7 +33,7 @@ public class ArticleAnalyzer {
     }
 
     public void addArticle(Article article){
-
+        articles.add(article);
     }
 
     public Article parseJson(String jsonLine) {
@@ -61,15 +65,15 @@ public class ArticleAnalyzer {
 
         return result;
 
-
-
     }  
 
-    // public String removeStopWords(String text) {
-    //     //remove stop words from Description
-    //     String result;
+    public String removeStopWords(String description) {
+        //remove stop words from Description
 
-    //     return result;
-    // }
+        for (String stopWord : stopWords) {
+            description = description.replaceAll("(?i)\\b" + stopWord + "\\b", "");
+        }
+        return description;
+    }
 
 }
