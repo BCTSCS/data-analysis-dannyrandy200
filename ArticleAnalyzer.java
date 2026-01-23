@@ -7,25 +7,41 @@ public class ArticleAnalyzer {
 
     private ArrayList<String> stopWords; //load from FileOperators
     private ArrayList<Article> articles; //load from FileOperators json 
+    // private static ArrayList<String> words;
+    // private static ArrayList<Double> values;
 
     public ArticleAnalyzer(){
         stopWords = FileOperator.getStringList("stopwords.txt");
         System.out.println("Stop words count: "+stopWords.size());
+        // words = new ArrayList<String>();
+        // values = new ArrayList<Double>();
         articles = new ArrayList<Article>();
         System.out.println("Articles count: "+articles.size());
 
     }
 
     public static void main(String[] args) {
-        ArticleAnalyzer analyzer = new ArticleAnalyzer();
-        ArrayList<String> lines = FileOperator.getStringList("data.txt");
-        for (String line: lines){
-            Article article = analyzer.parseJson(line);
-            String clean = analyzer.removeStopWords(article.getDescription());
-            article.setDescription(clean);
-            System.out.println(article);
-            analyzer.addArticle(article);
-        }  
+        // ArticleAnalyzer analyzer = new ArticleAnalyzer();
+        // ArrayList<String> lines = FileOperator.getStringList("data.txt");
+        ArrayList<String> sentiments = FileOperator.getStringList("sentiments.txt");
+
+        for (String sentinment : sentiments){
+            Pattern l = Pattern.compile("([A-Za-z0-9]+),(-?\\d+\\.\\d+)");
+            Matcher lm = l.matcher(sentinment);
+            boolean found = lm.find();
+            String word = found ? lm.group(1) : "";
+            Double value = found ? Double.parseDouble(lm.group(2)) : 0.0;
+            System.out.println(word + " : " + value);
+            // words.add(word);
+            // values.add(value);
+        }
+        // for (String line: lines){
+        //     Article article = analyzer.parseJson(line);
+        //     String clean = analyzer.removeStopWords(article.getDescription());
+        //     article.setDescription(clean);
+        //     // System.out.println(article);
+        //     analyzer.addArticle(article);
+        // }  
     }
 
     public void addStopWord(String word){
